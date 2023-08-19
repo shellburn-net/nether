@@ -19,7 +19,7 @@ echo "NETHER is starting ..."
 
 while $keep_running; do
     # add your repetitive tasks here
-	sleep 1
+    sleep 1
 done
 
 echo "NETHER stopped."
