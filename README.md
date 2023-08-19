@@ -26,7 +26,7 @@ sha256sum
 # .env
 user=foobar         - Specify linux user to be created inside the container (default: foobar).
 shared_dir=/data    - Specify shared dir to be attached to the container (default: /data)
-                      (if shared dir does not exists, it will be created!).
+                      (if shared dir does not exist, it will be created!).
 ```
 
 #### TODO
