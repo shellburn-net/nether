@@ -21,7 +21,7 @@ RUN chmod +x /init
 RUN echo "user: ${user}" && useradd -s /bin/bash -u 1000 -m ${user}
 
 USER ${user}
-ADD scripts /home/${user00}/scripts
+ADD scripts /home/${user}/scripts
 WORKDIR /home/${user}/scripts
 
 ADD dot_files/dot_bashrc /home/${user}/.bashrc
