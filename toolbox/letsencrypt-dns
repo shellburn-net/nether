@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# A simple wrapper on top of certbot dedicated to dns certs
+
+usage() {
+    echo "Usage: $0 [-d DOMAIN] [-d DOMAIN] ..."
+    echo
+    echo "Examples:"
+    echo "  $0 -d example.com -d *.example.com"
+}
+
+if [[ -z $1 ]]; then
+    usage
+else
+    #-- get the name of first domain --
+    primary_domain=$(echo $@ | grep -oP '\-d\s+\K[^-]+' | sed 's/*\.//' | awk 'NR==1' | tr -d '\n' | sed 's/[[:space:]]*$//')
+    echo "primary_domain: $primary_domain"
+    workdir=/workdir/letsencrypt
+    mkdir -p $workdir
+    mkdir -p ${workdir}/certs
+    cmd="certbot --manual --config-dir $workdir --work-dir $workdir --logs-dir $workdir --preferred-challenges dns certonly $@"
+    echo "cmd: $cmd"
+    $cmd
+
+    cd /workdir/letsencrypt/live/${primary_domain}
+    cat cert.pem     > ${workdir}/certs/${primary_domain}.crt
+    cat chain.pem    > ${workdir}/certs/${primary_domain}_ca.crt
+    cat privkey.pem  > ${workdir}/certs/${primary_domain}.key
+    openssl dhparam -out ${workdir}/certs/${primary_domain}.dh 2048
+    cat ${workdir}/certs/${primary_domain}.crt ${workdir}/certs/${primary_domain}_ca.crt ${workdir}/certs/${primary_domain}.key ${workdir}/certs/${primary_domain}.dh > ${workdir}/certs/${primary_domain}_haproxy.pem
+
+    echo "certs: ${workdir}/certs/"
+    ls -l ${workdir}/certs/
+fi
