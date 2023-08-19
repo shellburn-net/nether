@@ -36,3 +36,9 @@ shared_dir=/data    - Specify shared dir to be attached to the container (defaul
 - research: Think how to solve secrets (like ssh private keys) using inside container.
 - research: Keep bash history through docker builds.
 ```
+
+#### Dev
+```
+- Typically, to better distinguish between 'nether' scripts and others, it's good practice
+  to include a hint in the script's help/usage output.
+```
