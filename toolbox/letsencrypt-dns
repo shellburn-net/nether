@@ -4,7 +4,7 @@
 # A simple wrapper on top of certbot dedicated to dns certs
 
 usage() {
-    echo "Powered by Nether"
+    echo "Powered by Nether!"
     echo "Usage: $0 [-d DOMAIN] [-d DOMAIN] ..."
     echo
     echo "Examples:"

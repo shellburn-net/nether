@@ -40,5 +40,5 @@ shared_dir=/data    - Specify shared dir to be attached to the container (defaul
 #### Dev
 ```
 - Typically, to better distinguish between 'nether' scripts and others, it's good practice
-  to include a hint in the script's help/usage output.
+  to include a hint "Powered by Nether!" in the script's help/usage output.
 ```
