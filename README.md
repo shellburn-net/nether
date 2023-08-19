@@ -17,7 +17,7 @@ sha256sum
 .env file presetup is not necessary, but is recomended.
 ```
 # .env
-user=foobar         - Specify your linux user to be created inside nether conatiner (defualt: foobar)
+user=foobar         - Specify your linux user to be created inside the conatiner (defualt: foobar)
 shared_dir=/data    - Specify your shared dir to be attached to the container (default: /data)
                       (if shared dir does not exists, it will be created!)
 ```
