@@ -1,0 +1,73 @@
+#!/bin/bash
+
+if [[ ! -f .env ]]; then
+    echo ".env file not exists. Creating an empty one"
+    touch .env || exit 1
+fi
+
+# -- check .env file --
+env_checksum_old=$(cat .env.checksum 2> /dev/null | cut -c 1-12)
+sha256sum .env > .env.checksum || exit 1
+env_checksum_new=$(cat .env.checksum 2> /dev/null | cut -c 1-12)
+
+set -o allexport
+source .env
+set +o allexport
+
+# -- sanity check --
+if [[ -z $user ]]; then
+    export user=foobar
+fi
+if [[ -z $shared_dir ]]; then
+    export shared_dir=/data
+fi
+
+echo "user:             $user"
+echo "shared_dir:       $shared_dir"
+
+echo "env_checksum_old: $env_checksum_old"
+echo "env_checksum_new: $env_checksum_new"
+
+if [[ ! -d $shared_dir ]]; then
+    mkdir -p $shared_dir || exit 1
+fi
+
+# -- building new image --
+if [[ $1 == v ]]; then
+  dev_null=""
+else
+  dev_null="> /dev/null"
+fi
+
+if [[ $env_checksum_new != $env_checksum_old ]]; then
+  cache="--no-cache"
+else
+  cache=""
+fi
+
+echo "Building NETHER image ..."
+if [[ $1 == v ]]; then
+    docker compose -f docker-compose.yml build ${cache} --build-arg user=$user || exit 1
+else
+    docker compose -f docker-compose.yml build ${cache} --build-arg user=$user > /dev/null || exit 1
+fi
+
+
+image_id_old=$(docker inspect --format='{{.Image}}' nether 2> /dev/null | sed 's/sha256://' | cut -c 1-12)
+image_id_new=$(docker images --quiet nether:latest 2> /dev/null)
+container_status=$(docker inspect --format='{{.State.Status}}' nether 2> /dev/null)
+
+echo "image_id_old:     $image_id_old"
+echo "image_id_new:     $image_id_new"
+echo "container_status: $container_status"
+
+if [[ "$image_id_old" != "$image_id_new" ]]; then
+    docker compose -f docker-compose.yml up -d --force-recreate nether || exit 1
+fi
+
+if [[ "$container_status" != "running" ]]; then
+    docker compose -f docker-compose.yml up -d nether || exit 1
+fi
+
+docker exec -it nether bash -l
+

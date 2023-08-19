@@ -1,0 +1,26 @@
+#!/bin/bash
+
+keep_running=true
+
+handle_signal() {
+    echo "Received $1, exiting..."
+
+    # add your stop tasks here
+
+    keep_running=false
+}
+
+trap 'handle_signal SIGINT'  SIGINT
+trap 'handle_signal SIGTERM' SIGTERM
+
+echo "NETHER is starting ..."
+
+# add your start-up tasks here
+
+while $keep_running; do
+    # add your repetitive tasks here
+	sleep 1
+done
+
+echo "NETHER stopped."
+

@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  nether:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nether:latest
+    container_name: nether
+    hostname: nether
+    volumes:
+      - "${shared_dir}:/data"
