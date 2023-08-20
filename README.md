@@ -57,7 +57,8 @@ shared_dir=/data    - Specify shared dir to be attached to the container (defaul
         /etc/hosts file with these ones.
 - idea: Have a new variable in .env for default current working dir. This is an optional, and if
         it's not specified, then the first on shared_dirs list will be selected.
-
+- idea: dot_bashrc templates could be selected through nether.yml also:
+        dot_bashrc: /workdir/resources/dot_files/dot_bashrc_nice_one.
 ```
 
 #### Dev
